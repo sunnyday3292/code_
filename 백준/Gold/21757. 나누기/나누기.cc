@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
 int main() {
@@ -8,38 +7,27 @@ int main() {
 
     int N;
     cin >> N;
-    int A[100001], S[100001];
-    long long dp[5];
-    S[0] = 0;
+    vector<long long> A(N + 1), S(N + 1, 0);
     for (int i = 1; i <= N; i++) {
         cin >> A[i];
         S[i] = S[i - 1] + A[i];
     }
-    long long ans = S[N] / 4;
-    if (S[N] == 0) {
-        long long zero = 0;
-        for (int i = 1; i < N; i++) {
-            if (S[i] == 0) zero++;
-        }
-        cout << zero * (zero - 1) * (zero - 2) / 6;
-        return 0;
-    }
+
     if (S[N] % 4 != 0) {
-        cout << 0 << '\n';
+        cout << 0;
         return 0;
     }
 
-    dp[0] = 1;
-    long long ret = 0;
-    for (int i = 1; i <= N; i++) {
-        int t = S[i] / ans;
-        if (S[i] % ans != 0 || t == 0 || t > 4) continue;
-        else {
-            dp[t] += dp[t - 1];
-        }
-        ret = dp[4];
-    }
-    cout << ret;
+    long long target = S[N] / 4;
+    long long dp[4] = {0}; 
+    dp[0] = 1; 
 
+    for (int i = 1; i < N; i++) {
+        if (S[i] == target * 3) dp[3] += dp[2];
+        if (S[i] == target * 2) dp[2] += dp[1];
+        if (S[i] == target * 1) dp[1] += dp[0];
+    }
+
+    cout << dp[3];
     return 0;
 }
